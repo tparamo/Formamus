@@ -8,7 +8,12 @@ import scala.util.Random
  * @param valor As, 2, 3, 4, 5, 6, 7, Sota, Caballo, Rey
  * @param palo  Oros, Copas, Espadas y Bastos
  */
-case class Carta(valor: String, palo: String)
+case class Carta(valor: String, palo: String) /*{
+  override def equals(o: Any) = o match {
+    case that: Carta => (that.valor.equalsIgnoreCase(this.valor) && that.palo.equalsIgnoreCase(this.palo))
+    case _ => false
+  }
+}*/
 
 object Baraja {
 
@@ -49,7 +54,11 @@ object Baraja {
    * @param numero Numero de cartas a repartir
    * @return Seq[[Carta]]
    */
-  def repartirCartas(numero: Int): Seq[Carta] = ???
+  def repartirCartas(numero: Int): Seq[Carta] = {
+    val jugada = mazoActualizado.take(numero)
+    actualizaMazo(jugada)
+    jugada
+  }
 
   /**
    * Este método nos sirve para dejar actualizado el mazoActualizado, que sera el actual menos
@@ -59,7 +68,10 @@ object Baraja {
    * @param repartidas Seq[[Carta]] de las cartas repartidas y que hay que quitar del
    *                   mazoActualizado
    */
-  private def actualizaMazo(repartidas: Seq[Carta]): Unit = ???
+
+  private def actualizaMazo(repartidas: Seq[Carta]): Unit = {
+    mazoActualizado = mazoActualizado.diff(repartidas)
+  }
 
 
   /**
@@ -67,14 +79,20 @@ object Baraja {
    * acaba una partida. Recordad dejar descartes a cero. Actualmente se utiliza en test para
    * dejar la baraja limpia en cada test.
    */
-  def reiniciaMazo: Unit = ???
+  def reiniciaMazo: Unit = {
+    mazoActualizado = Random.shuffle(mazo)
+    descartes = Seq[Carta]()
+  }
 
   /**
    * Este metodo se utilizará cuando se acaben las cartas del mazoActualizado. En ese momento, se
    * pondran en el mazoActualizado los descartes de los muses que haya habido. Tener en cuenta
    * que los descartes despues de esta acción no existiran
    */
-  def volcarDescartesEnMazo: Unit = ???
+  def volcarDescartesEnMazo: Unit = {
+    mazoActualizado = descartes
+    descartes = Seq[Carta]()
+  }
 
   /**
    * Con este metodo podremos añadir los descartes de cada mus dado a la variable de descartes.
@@ -84,14 +102,18 @@ object Baraja {
    *
    * @param descarte Seq[[Carta]] a insertar en la variable descartes.
    */
-  def descartar(descarte: Seq[Carta]): Unit = ???
+  def descartar(descarte: Seq[Carta]): Unit = {
+    descartes = descartes.union(descarte)
+  }
 
   /**
    * Este metodo nos informara del numero de cartas que quedan en el mazoActualizado
    *
    * @return [[Int]] con el numero de cartas del mazoActualizado
    */
-  def cuantasQuedan: Int = ???
+  def cuantasQuedan: Int = {
+    mazoActualizado.length
+  }
 
   /**
    * Metodo que mete en un String las cartas que quedan en el mazoActualizado

@@ -1,11 +1,15 @@
 package com.avertia.mus
 
+import com.avertia.mus.Baraja._
+
 /**
  * Clase que contiene la jugada concreta. De momento sólo contendrá las cartas, que siempre
  * deberían ser cuatro
  * @param cartas Seq[[Carta]] con las 4 cartas para jugar
  */
 class Jugada(val cartas: Seq[Carta]) {
+
+
 
   /**
    * Metodo que a de realizar mus. Se deberá de controlar los descartes, repartir nuevas cartas y
@@ -16,7 +20,16 @@ class Jugada(val cartas: Seq[Carta]) {
    *                 cartas mostradas
    * @return La nueva [[Jugada]]
    */
-  def mus(descarte: Seq[Int]): Jugada = ???
+  def mus(descarte: Seq[Int]): Jugada = {
+    if(cuantasQuedan < descarte.length) volcarDescartesEnMazo
+
+    val a_descartar = descarte.map(cartas.toIndexedSeq)
+    descartar(a_descartar)
+    val nuevas_cartas = repartirCartas(descarte.length)
+    val aux = cartas.diff(a_descartar).union(nuevas_cartas)
+
+    new Jugada(aux)
+  }
 
 
   /**
@@ -28,11 +41,15 @@ class Jugada(val cartas: Seq[Carta]) {
    */
   override def toString: String = {
 
-    val cartasString = ???
+    val cartasString = cartas.zipWithIndex.foldLeft("")((acc, x) => acc + getString(x._1, x._2))
 
     s"""Cartas del jugador:
        |********************
        |$cartasString
        |""".stripMargin
+  }
+
+  def getString(c: Carta, i: Int): String = {
+    "[%d] %s de %s\n".format(i, c.valor, c.palo)
   }
 }
