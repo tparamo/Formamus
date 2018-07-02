@@ -26,9 +26,9 @@ class Jugada(val cartas: Seq[Carta]) {
     val a_descartar = descarte.map(cartas.toIndexedSeq)
     descartar(a_descartar)
     val nuevas_cartas = repartirCartas(descarte.length)
-    val aux = cartas.diff(a_descartar).union(nuevas_cartas)
+    val nueva_jugada = cartas.diff(a_descartar).union(nuevas_cartas)
 
-    new Jugada(aux)
+    new Jugada(nueva_jugada)
   }
 
 
